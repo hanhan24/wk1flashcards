@@ -4,82 +4,62 @@
   <meta charset="UTF-8">
   <title>TOEFL Flashcards</title>
   <style>
-    /* 화면 전체를 덮는 카드 */
+    /* 화면 전체 카드 */
     html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
+      width: 100%; height: 100%; margin: 0;
       background: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
+      display: flex; justify-content: center; align-items: center;
     }
     #card {
       position: relative;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
+      display: flex; justify-content: center; align-items: center;
     }
 
-    /* 단어뷰 & 의미뷰 모두 같은 크기로 중앙 배치 */
+    /* 단어/의미 중앙 배치 */
     #wordView, #meaningView {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
+      width: 80%;
     }
 
-    /* 단어: 기존 3rem → 9rem (3배) */
+    /* 단어 크기 (3배) */
     #word {
-      font-size: 9rem;
-      margin: 0.2em 0;
+      font-size: 9rem; margin: 0.2em 0;
       cursor: pointer;
     }
-    /* 의미: 기존 1.5rem → 4.5rem (3배) */
+    /* 의미 크기 (3배) + 왼쪽 정렬 */
     #meaning {
-      font-size: 4.5rem;
-      margin: 0.2em 0;
+      font-size: 4.5rem; margin: 0.2em 0;
       cursor: pointer;
-      white-space: pre-line;
-      line-height: 1.2;
+      white-space: pre-line; line-height: 1.2;
+      text-align: left;
     }
 
-    /* 좌우 내비게이션 화살표 */
+    /* 좌/우 내비 버튼 (3배) */
     button.nav {
-      position: absolute;
-      top: 50%;
+      position: absolute; top: 50%;
       transform: translateY(-50%);
-      font-size: 7.5rem; /* 기존 1.5rem → 7.5rem (5배) */
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #333;
+      font-size: 4.5rem; /* 1.5rem × 3 */
+      background: none; border: none;
+      cursor: pointer; color: #333;
       padding: 0;
     }
     #prev { left: 1rem; }
     #next { right: 1rem; }
 
-    /* 하단에 고정된 재생/일시정지 컨트롤 */
+    /* 하단 오디오 컨트롤 (3배) */
     #audioControls {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
+      position: fixed; bottom: 2rem; left: 50%;
       transform: translateX(-50%);
     }
     #audioControls button {
-      font-size: 7.5rem;    /* 5배 확대 */
+      font-size: 4.5rem; /* 1.5rem × 3 */
       margin: 0 1rem;
-      background: #007bff;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      padding: 0.5em 0.8em;
-      cursor: pointer;
+      background: #007bff; border: none;
+      border-radius: 8px; color: white;
+      padding: 0.5em 0.8em; cursor: pointer;
       transition: background 0.2s;
     }
     #audioControls button:hover {
@@ -110,6 +90,7 @@
 
   <script>
     const words = [
+      /* …여기에 19개 표현 객체를 동일 포맷으로 추가하세요… */
       {
         word: "To hold true",
         synonym: "To remain valid",
@@ -118,39 +99,7 @@
         audioWord:    "hold_true_word.mp3",
         audioMeaning: "hold_true_meaning.mp3"
       },
-      {
-        word: "To draw attention to",
-        synonym: "To highlight",
-        definition: "To make people notice something",
-        example: "The study draws attention to the importance of clean water.",
-        audioWord:    "draw_attention_to_word.mp3",
-        audioMeaning: "draw_attention_to_meaning.mp3"
-      },
-      {
-        word: "To put into practice",
-        synonym: "To implement",
-        definition: "To start using an idea in real life",
-        example: "Researchers put the new method into practice in the lab.",
-        audioWord:    "put_into_practice_word.mp3",
-        audioMeaning: "put_into_practice_meaning.mp3"
-      },
-      {
-        word: "To stand out",
-        synonym: "To be noticeable",
-        definition: "To be much better or more obvious",
-        example: "Her clear writing style stands out in academic papers.",
-        audioWord:    "stand_out_word.mp3",
-        audioMeaning: "stand_out_meaning.mp3"
-      },
-      {
-        word: "To rule out",
-        synonym: "To eliminate",
-        definition: "To decide that something is not possible",
-        example: "The committee ruled out several proposals as impractical.",
-        audioWord:    "rule_out_word.mp3",
-        audioMeaning: "rule_out_meaning.mp3"
-      }
-      // … 이후 표현들도 동일 포맷으로 추가
+      /* 다음 표현들: draw attention to, put into practice, stand out, rule out, … */
     ];
 
     let idx = 0;
@@ -166,24 +115,19 @@
 
     function loadCard() {
       const entry = words[idx];
-      // 단어 뷰 업데이트
       wordEl.textContent = entry.word;
-      // 의미 뷰 업데이트
-      meaningEl.innerHTML = 
+      meaningEl.innerHTML =
         entry.synonym    + "<br>" +
         entry.definition + "<br>" +
         "<em>" + entry.example + "</em>";
-      // 오디오 소스 설정 + 로드
       audioWord.src    = entry.audioWord;
       audioMeaning.src = entry.audioMeaning;
       audioWord.load();
       audioMeaning.load();
-      // 뷰 초기화
       wordView.style.display    = "";
       meaningView.style.display = "none";
     }
 
-    // 플레이/일시정지 버튼
     playBtn.onclick  = () => {
       if (wordView.style.display !== "none") audioWord.play();
       else audioMeaning.play();
@@ -193,22 +137,18 @@
       else audioMeaning.pause();
     };
 
-    // 카드 클릭 → 뷰 전환
     wordEl.onclick    = () => { wordView.style.display = "none"; meaningView.style.display = ""; };
     meaningEl.onclick = () => { meaningView.style.display = "none"; wordView.style.display    = ""; };
 
-    // 네비게이션
     document.getElementById('prev').onclick = () => {
-      idx = (idx - 1 + words.length) % words.length;
-      loadCard();
+      idx = (idx - 1 + words.length) % words.length; loadCard();
     };
     document.getElementById('next').onclick = () => {
-      idx = (idx + 1) % words.length;
-      loadCard();
+      idx = (idx + 1) % words.length; loadCard();
     };
 
-    // 초기 실행
     loadCard();
   </script>
+
 </body>
 </html>
