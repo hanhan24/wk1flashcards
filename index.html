@@ -4,41 +4,68 @@
   <meta charset="UTF-8">
   <title>TOEFL Expressions Flashcards</title>
   <style>
-    body { 
-      font-family: sans-serif; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      padding: 2em; 
+    html, body {
+      height: 100%;
+      margin: 0;
     }
-    #card { 
-      border:1px solid #ccc; 
-      border-radius:8px; 
-      padding:2em; 
-      width:320px; 
-      position:relative; 
-      text-align:center; 
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f5f5f5;
+      font-family: sans-serif;
     }
-    #word, #meaning { 
-      font-size:1.4em; 
-      margin:1em 0; 
-      cursor:pointer; 
-      white-space: pre-line; 
+    #card {
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      padding: 3em;
+      width: 500px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      text-align: center;
     }
-    .controls, .meaningControls { 
-      margin-top:1em; 
+    #word {
+      font-size: 3rem;
+      margin: 0.5em 0;
+      cursor: pointer;
     }
-    button.nav { 
-      position:absolute; 
-      top:50%; 
-      transform:translateY(-50%); 
-      background:none; 
-      border:none; 
-      font-size:1.5em; 
-      cursor:pointer; 
+    #meaning {
+      font-size: 1.5rem;
+      margin: 0.5em 0;
+      cursor: pointer;
+      white-space: pre-line;
+      line-height: 1.4;
     }
-    #prev { left:-1.5em; } 
-    #next { right:-1.5em; }
+    .controls, .meaningControls {
+      margin-top: 1.5em;
+    }
+    button {
+      font-size: 1.5rem;
+      padding: 0.75em 1em;
+      margin: 0 0.5em;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button.nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      color: #333;
+      font-size: 2.5rem;
+      padding: 0.2em;
+      margin: 0;
+    }
+    #prev { left: -1.2em; }
+    #next { right: -1.2em; }
   </style>
 </head>
 <body>
@@ -70,7 +97,7 @@
   <script>
     const words = [
       {
-        word: "hold true",
+        word: "To hold true",
         synonym: "To remain valid",
         definition: "To continue to be correct or true",
         example: "The theory holds true even under extreme conditions.",
@@ -78,7 +105,7 @@
         audioMeaning: "hold_true_meaning.mp3"
       },
       {
-        word: "draw attention to",
+        word: "To draw attention to",
         synonym: "To highlight",
         definition: "To make people notice something",
         example: "The study draws attention to the importance of clean water.",
@@ -86,7 +113,7 @@
         audioMeaning: "draw_attention_to_meaning.mp3"
       },
       {
-        word: "put into practice",
+        word: "To put into practice",
         synonym: "To implement",
         definition: "To start using an idea in real life",
         example: "Researchers put the new method into practice in the lab.",
@@ -94,7 +121,7 @@
         audioMeaning: "put_into_practice_meaning.mp3"
       },
       {
-        word: "stand out",
+        word: "To stand out",
         synonym: "To be noticeable",
         definition: "To be much better or more obvious",
         example: "Her clear writing style stands out in academic papers.",
@@ -102,13 +129,14 @@
         audioMeaning: "stand_out_meaning.mp3"
       },
       {
-        word: "rule out",
+        word: "To rule out",
         synonym: "To eliminate",
         definition: "To decide that something is not possible",
         example: "The committee ruled out several proposals as impractical.",
         audioWord: "rule_out_word.mp3",
         audioMeaning: "rule_out_meaning.mp3"
       }
+      // …추가 표현도 같은 포맷으로
     ];
 
     let idx = 0;
@@ -135,33 +163,16 @@
       meaningView.style.display = "none";
     }
 
-    // 재생·일시정지
     document.getElementById('playWord').onclick    = () => audioWord.play();
     document.getElementById('pauseWord').onclick   = () => audioWord.pause();
     document.getElementById('playMeaning').onclick = () => audioMeaning.play();
     document.getElementById('pauseMeaning').onclick= () => audioMeaning.pause();
 
-    // 단어 클릭 → 의미 뷰
-    wordEl.onclick = () => {
-      wordView.style.display    = "none";
-      meaningView.style.display = "";
-    };
+    wordEl.onclick    = () => { wordView.style.display = "none"; meaningView.style.display = ""; };
+    meaningEl.onclick= () => { meaningView.style.display = "none"; wordView.style.display = ""; };
 
-    // **의미 클릭 → 단어 뷰로 돌아가기** ← 추가된 부분
-    meaningEl.onclick = () => {
-      meaningView.style.display = "none";
-      wordView.style.display    = "";
-    };
-
-    // ◀/▶ 내비게이션
-    document.getElementById('next').onclick = () => {
-      idx = (idx + 1) % words.length;
-      loadCard();
-    };
-    document.getElementById('prev').onclick = () => {
-      idx = (idx - 1 + words.length) % words.length;
-      loadCard();
-    };
+    document.getElementById('next').onclick = () => { idx = (idx + 1) % words.length; loadCard(); };
+    document.getElementById('prev').onclick = () => { idx = (idx - 1 + words.length) % words.length; loadCard(); };
 
     loadCard();
   </script>
