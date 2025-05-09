@@ -10,12 +10,18 @@
       background: #f5f5f5;
       display: flex; justify-content: center; align-items: center;
     }
-    #card {
-      position: relative;
-      width: 100%; height: 100%;
-      background: #fff;
-      display: flex; justify-content: center; align-items: center;
-    }
+    /* 카드 전체 둥근 테두리 및 배너 통일감 */
+#card {
+  border: 2px solid #0055cc;    /* 파란색 테두리 */
+  border-radius: 12px;          /* 모서리 둥글게 */
+  overflow: hidden;             /* 배너 모서리 자르기 */
+}
+
+/* 상단 배너 색상 및 높이 */
+.card-header {
+  background: #0055cc;          /* 배너 배경색 */
+  height: 60px;                 /* 배너 높이 */
+}
 
     /* 단어/의미 중앙 배치 */
     #wordView, #meaningView {
