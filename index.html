@@ -2,187 +2,236 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>TOEFL Flashcards</title>
+  <title>TOEFL Expressions Flashcards</title>
   <style>
-    /* 화면 전체 카드 */
+    /* 화면 전체 배경 및 중앙 정렬 */
     html, body {
       width: 100%; height: 100%; margin: 0;
-      background: #f5f5f5;
+      background: #f0f0f0;
       display: flex; justify-content: center; align-items: center;
     }
-    /* 카드 전체 둥근 테두리 및 배너 통일감 */
-#card {
-  border: 2px solid #0055cc;    /* 파란색 테두리 */
-  border-radius: 12px;          /* 모서리 둥글게 */
-  overflow: hidden;             /* 배너 모서리 자르기 */
-}
-
-/* 상단 배너 색상 및 높이 */
-.card-header {
-  background: #0055cc;          /* 배너 배경색 */
-  height: 60px;                 /* 배너 높이 */
-}
-
-    /* 단어/의미 중앙 배치 */
+    /* 카드 컨테이너 */
+    #card {
+      position: relative;
+      width: 90%; max-width: 600px;
+      background: #fff;
+      border: 2px solid #0055cc;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    /* 상단 배너 */
+    .card-header {
+      background: #0055cc;
+      height: 60px;
+    }
+    /* 본문 영역 */
+    .card-body {
+      position: relative;
+      padding: 2em 1em 4em; /* 하단 컨트롤 공간 확보 */
+      text-align: center;
+    }
+    /* 단어 보기 */
     #wordView, #meaningView {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80%;
+      display: none;
     }
-
-    /* 단어 크기 (3배) */
+    #wordView.active, #meaningView.active {
+      display: block;
+    }
     #word {
-      font-size: 6rem; margin: 0.2em 0;
+      font-size: 4rem;
       cursor: pointer;
-text-align: center;
     }
-    /* 의미 크기 (3배) + 왼쪽 정렬 */
-    #meaning {
-      font-size: 3rem; margin: 0.2em 0;
-      cursor: pointer;
-      white-space: pre-line; line-height: 1.2;
+    /* 의미 보기: 유의어/정의/예문 */
+    #meaningView {
       text-align: left;
+      font-family: sans-serif;
     }
-
-    /* 좌/우 내비 버튼 (3배) */
+    .meaning-section {
+      margin-bottom: 1.5em;
+    }
+    .meaning-label {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0.3em;
+    }
+    .meaning-content {
+      font-size: 1.2rem;
+    }
+    .meaning-content.example {
+      font-style: italic;
+      margin-top: 0.5em;
+    }
+    /* 내비게이션 버튼 */
     button.nav {
-      position: absolute; top: 50%;
+      position: absolute;
+      top: 50%;
       transform: translateY(-50%);
-      font-size: 4.5rem; /* 1.5rem × 3 */
-      background: none; border: none;
-      cursor: pointer; color: #333;
+      font-size: 2.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #333;
       padding: 0;
     }
-    #prev { left: 1rem; }
-    #next { right: 1rem; }
-
-    /* 하단 오디오 컨트롤 (3배) */
+    #prev { left: 0.5em; }
+    #next { right: 0.5em; }
+    /* 하단 오디오 컨트롤 */
     #audioControls {
-      position: fixed; bottom: 2rem; left: 50%;
+      position: absolute;
+      bottom: 1em; left: 50%;
       transform: translateX(-50%);
     }
     #audioControls button {
-      font-size: 4.5rem; /* 1.5rem × 3 */
-      margin: 0 1rem;
-      background: #ffffff; border: none;
-      border-radius: 8px; color: white;
-      padding: 0.5em 0.8em; cursor: pointer;
+      font-size: 2.5rem;
+      margin: 0 0.5em;
+      background: #0055cc;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      padding: 0.2em 0.5em;
+      cursor: pointer;
       transition: background 0.2s;
     }
     #audioControls button:hover {
-      background: #0056b3;
+      background: #003f99;
     }
   </style>
 </head>
 <body>
 
   <div id="card">
-    <button id="prev" class="nav">◀</button>
+    <div class="card-header"></div>
+    <div class="card-body">
+      <button id="prev" class="nav">◀</button>
 
-    <div id="wordView">
-      <div id="word">Loading...</div>
+      <!-- 단어 보기 -->
+      <div id="wordView" class="active">
+        <div id="word">Loading...</div>
+      </div>
+
+      <!-- 의미 보기 -->
+      <div id="meaningView">
+        <div class="meaning-section">
+          <div class="meaning-label">유의어</div>
+          <div class="meaning-content synonym"></div>
+        </div>
+        <div class="meaning-section">
+          <div class="meaning-label">정의</div>
+          <div class="meaning-content definition"></div>
+        </div>
+        <div class="meaning-section">
+          <div class="meaning-label">예문</div>
+          <div class="meaning-content example"></div>
+        </div>
+      </div>
+
+      <button id="next" class="nav">▶</button>
+
+      <!-- 오디오 컨트롤 -->
+      <div id="audioControls">
+        <button id="playBtn">▶️</button>
+        <button id="pauseBtn">⏸️</button>
+      </div>
     </div>
-
-    <div id="meaningView" style="display:none">
-      <div id="meaning"></div>
-    </div>
-
-    <button id="next" class="nav">▶</button>
-  </div>
-
-  <div id="audioControls">
-    <button id="playBtn">▶️</button>
-    <button id="pauseBtn">⏸️</button>
   </div>
 
   <script>
     const words = [
       {
         word: "To hold true",
-        synonym: "To remain valid",
+        synonym:    "To remain valid",
         definition: "To continue to be correct or true",
-        example: "The theory holds true even under extreme conditions.",
+        example:    "The theory holds true even under extreme conditions.",
         audioWord:    "hold_true_word.mp3",
         audioMeaning: "hold_true_meaning.mp3"
       },
       {
         word: "To draw attention to",
-        synonym: "To highlight",
+        synonym:    "To highlight",
         definition: "To make people notice something",
-        example: "The study draws attention to the importance of clean water.",
+        example:    "The study draws attention to the importance of clean water.",
         audioWord:    "draw_attention_to_word.mp3",
         audioMeaning: "draw_attention_to_meaning.mp3"
       },
       {
         word: "To put into practice",
-        synonym: "To implement",
+        synonym:    "To implement",
         definition: "To start using an idea in real life",
-        example: "Researchers put the new method into practice in the lab.",
+        example:    "Researchers put the new method into practice in the lab.",
         audioWord:    "put_into_practice_word.mp3",
         audioMeaning: "put_into_practice_meaning.mp3"
       },
       {
         word: "To stand out",
-        synonym: "To be noticeable",
+        synonym:    "To be noticeable",
         definition: "To be much better or more obvious",
-        example: "Her clear writing style stands out in academic papers.",
+        example:    "Her clear writing style stands out in academic papers.",
         audioWord:    "stand_out_word.mp3",
         audioMeaning: "stand_out_meaning.mp3"
       },
       {
         word: "To rule out",
-        synonym: "To eliminate",
+        synonym:    "To eliminate",
         definition: "To decide that something is not possible",
-        example: "The committee ruled out several proposals as impractical.",
+        example:    "The committee ruled out several proposals as impractical.",
         audioWord:    "rule_out_word.mp3",
         audioMeaning: "rule_out_meaning.mp3"
       }
-      // … 이후 표현들도 동일 포맷으로 추가
+      // … 나머지 표현들도 같은 형식으로 추가 …
     ];
 
     let idx = 0;
     const wordView    = document.getElementById('wordView');
     const meaningView = document.getElementById('meaningView');
     const wordEl      = document.getElementById('word');
-    const meaningEl   = document.getElementById('meaning');
+    const synEl       = document.querySelector('.meaning-content.synonym');
+    const defEl       = document.querySelector('.meaning-content.definition');
+    const exEl        = document.querySelector('.meaning-content.example');
     const playBtn     = document.getElementById('playBtn');
     const pauseBtn    = document.getElementById('pauseBtn');
-
-    const audioWord    = new Audio();
+    const audioWord   = new Audio();
     const audioMeaning = new Audio();
 
     function loadCard() {
-      const entry = words[idx];
-      wordEl.textContent = entry.word;
-      meaningEl.innerHTML =
-        entry.synonym    + "<br>" +
-        entry.definition + "<br>" +
-        "<em>" + entry.example + "</em>";
-      audioWord.src    = entry.audioWord;
-      audioMeaning.src = entry.audioMeaning;
+      const e = words[idx];
+      wordEl.textContent = e.word;
+      synEl.textContent = e.synonym;
+      defEl.textContent = e.definition;
+      exEl.textContent = e.example;
+      audioWord.src    = e.audioWord;
+      audioMeaning.src = e.audioMeaning;
       audioWord.load();
       audioMeaning.load();
-      wordView.style.display    = "";
-      meaningView.style.display = "none";
+      wordView.classList.add('active');
+      meaningView.classList.remove('active');
     }
 
-    playBtn.onclick  = () => {
-      if (wordView.style.display !== "none") audioWord.play();
+    playBtn.onclick = () => {
+      if (wordView.classList.contains('active')) audioWord.play();
       else audioMeaning.play();
     };
     pauseBtn.onclick = () => {
-      if (wordView.style.display !== "none") audioWord.pause();
+      if (wordView.classList.contains('active')) audioWord.pause();
       else audioMeaning.pause();
     };
 
-    wordEl.onclick    = () => { wordView.style.display = "none"; meaningView.style.display = ""; };
-    meaningEl.onclick = () => { meaningView.style.display = "none"; wordView.style.display    = ""; };
+    wordEl.onclick = () => {
+      wordView.classList.remove('active');
+      meaningView.classList.add('active');
+    };
+    exEl.parentElement.parentElement.onclick = () => {
+      meaningView.classList.remove('active');
+      wordView.classList.add('active');
+    };
 
     document.getElementById('prev').onclick = () => {
-      idx = (idx - 1 + words.length) % words.length; loadCard();
+      idx = (idx - 1 + words.length) % words.length;
+      loadCard();
     };
     document.getElementById('next').onclick = () => {
-      idx = (idx + 1) % words.length; loadCard();
+      idx = (idx + 1) % words.length;
+      loadCard();
     };
 
     loadCard();
