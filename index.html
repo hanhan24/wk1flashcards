@@ -1,95 +1,109 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>TOEFL Expressions Flashcards</title>
+  <meta charset="UTF-8" />
+  <title>TOEFL Flashcards</title>
   <style>
-    /* 화면 전체 배경 및 중앙 정렬 */
+    /* 전체 배경 */
     html, body {
-      width: 100%; height: 100%; margin: 0;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
       background: #f0f0f0;
-      display: flex; justify-content: center; align-items: center;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: sans-serif;
     }
-    /* 카드 컨테이너 */
+
+    /* 플래시카드 + 화살표 래퍼 */
+    .flashcard-wrapper {
+      display: flex; align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    /* 좌우 내비 버튼 */
+    button.nav {
+      background: none;
+      border: none;
+      font-size: 4rem;
+      cursor: pointer;
+      color: #333;
+      padding: 0 1rem;
+    }
+
+    /* 카드 스타일 */
     #card {
       position: relative;
-      width: 90%; max-width: 600px;
+      width: 80vw; max-width: 800px;
+      height: 40vh; max-height: 450px;
       background: #fff;
-      border: 2px solid #0055cc;
-      border-radius: 12px;
+      border: 3px solid #0055cc;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     }
-    /* 상단 배너 */
+
+    /* 배너 */
     .card-header {
-      background: #75b5fa;
-      height: 60px;
+      background: #0055cc;
+      height: 20%;
     }
-    /* 본문 영역 */
+
+    /* 카드 본문 (단어/의미) */
     .card-body {
-      position: relative;
-      padding: 2em 1em 4em; /* 하단 컨트롤 공간 확보 */
-      text-align: center;
+      position: absolute;
+      top: 20%; bottom: 0; left: 0; right: 0;
+      padding: 1rem;
+      display: flex; align-items: center; justify-content: center;
     }
-    /* 단어 보기 */
+
+    /* 단어 뷰 */
     #wordView, #meaningView {
       display: none;
+      width: 100%;
+      text-align: center;
     }
     #wordView.active, #meaningView.active {
       display: block;
     }
     #word {
-      font-size: 4rem;
+      font-size: 6rem;
       cursor: pointer;
+      line-height: 1.2;
     }
-    /* 의미 보기: 유의어/정의/예문 */
+
+    /* 의미 뷰 */
     #meaningView {
       text-align: left;
-      font-family: sans-serif;
     }
     .meaning-section {
-      margin-bottom: 1.5em;
+      margin-bottom: 1.5rem;
     }
     .meaning-label {
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: bold;
-      margin-bottom: 0.3em;
+      margin-bottom: 0.5rem;
     }
     .meaning-content {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
     }
     .meaning-content.example {
       font-style: italic;
-      margin-top: 0.5em;
+      margin-top: 0.5rem;
     }
-    /* 내비게이션 버튼 */
-    button.nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 2.5rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #333;
-      padding: 0;
-    }
-    #prev { left: 0.5em; }
-    #next { right: 0.5em; }
+
     /* 하단 오디오 컨트롤 */
     #audioControls {
-      position: absolute;
-      bottom: 1em; left: 50%;
-      transform: translateX(-50%);
+      display: flex; justify-content: center;
+      gap: 2rem;
     }
     #audioControls button {
-      font-size: 2.5rem;
-      margin: 0 0.5em;
-      background: #fcfeff;
+      font-size: 4rem;
+      padding: 0.2rem 0.6rem;
+      background: #0055cc;
       border: none;
       border-radius: 8px;
       color: white;
-      padding: 0.2em 0.5em;
       cursor: pointer;
       transition: background 0.2s;
     }
@@ -100,40 +114,40 @@
 </head>
 <body>
 
-  <div id="card">
-    <div class="card-header"></div>
-    <div class="card-body">
-      <button id="prev" class="nav">◀</button>
+  <div class="flashcard-wrapper">
+    <button id="prev" class="nav">◀</button>
 
-      <!-- 단어 보기 -->
-      <div id="wordView" class="active">
-        <div id="word">Loading...</div>
-      </div>
-
-      <!-- 의미 보기 -->
-      <div id="meaningView">
-        <div class="meaning-section">
-          <div class="meaning-label">유의어</div>
-          <div class="meaning-content synonym"></div>
+    <div id="card">
+      <div class="card-header"></div>
+      <div class="card-body">
+        <!-- 단어 보기 -->
+        <div id="wordView" class="active">
+          <div id="word">Loading...</div>
         </div>
-        <div class="meaning-section">
-          <div class="meaning-label">정의</div>
-          <div class="meaning-content definition"></div>
+        <!-- 의미 보기 -->
+        <div id="meaningView">
+          <div class="meaning-section">
+            <div class="meaning-label">유의어</div>
+            <div class="meaning-content synonym"></div>
+          </div>
+          <div class="meaning-section">
+            <div class="meaning-label">정의</div>
+            <div class="meaning-content definition"></div>
+          </div>
+          <div class="meaning-section">
+            <div class="meaning-label">예문</div>
+            <div class="meaning-content example"></div>
+          </div>
         </div>
-        <div class="meaning-section">
-          <div class="meaning-label">예문</div>
-          <div class="meaning-content example"></div>
-        </div>
-      </div>
-
-      <button id="next" class="nav">▶</button>
-
-      <!-- 오디오 컨트롤 -->
-      <div id="audioControls">
-        <button id="playBtn">▶️</button>
-        <button id="pauseBtn">⏸️</button>
       </div>
     </div>
+
+    <button id="next" class="nav">▶</button>
+  </div>
+
+  <div id="audioControls">
+    <button id="playBtn">▶️</button>
+    <button id="pauseBtn">⏸️</button>
   </div>
 
   <script>
@@ -178,7 +192,7 @@
         audioWord:    "rule_out_word.mp3",
         audioMeaning: "rule_out_meaning.mp3"
       }
-      // … 나머지 표현들도 같은 형식으로 추가 …
+      // … 나머지 표현 추가 …
     ];
 
     let idx = 0;
@@ -195,12 +209,12 @@
 
     function loadCard() {
       const e = words[idx];
-      wordEl.textContent = e.word;
-      synEl.textContent = e.synonym;
-      defEl.textContent = e.definition;
-      exEl.textContent = e.example;
-      audioWord.src    = e.audioWord;
-      audioMeaning.src = e.audioMeaning;
+      wordEl.textContent    = e.word;
+      synEl.textContent     = e.synonym;
+      defEl.textContent     = e.definition;
+      exEl.textContent      = e.example;
+      audioWord.src         = e.audioWord;
+      audioMeaning.src      = e.audioMeaning;
       audioWord.load();
       audioMeaning.load();
       wordView.classList.add('active');
@@ -220,7 +234,8 @@
       wordView.classList.remove('active');
       meaningView.classList.add('active');
     };
-    exEl.parentElement.parentElement.onclick = () => {
+    // 의미 화면 어느 곳 클릭해도 단어뷰로
+    meaningView.onclick = () => {
       meaningView.classList.remove('active');
       wordView.classList.add('active');
     };
