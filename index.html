@@ -70,7 +70,7 @@
   <script>
     const words = [
       {
-        word: "To hold true",
+        word: "hold true",
         synonym: "To remain valid",
         definition: "To continue to be correct or true",
         example: "The theory holds true even under extreme conditions.",
@@ -78,7 +78,7 @@
         audioMeaning: "hold_true_meaning.mp3"
       },
       {
-        word: "To draw attention to",
+        word: "draw attention to",
         synonym: "To highlight",
         definition: "To make people notice something",
         example: "The study draws attention to the importance of clean water.",
@@ -86,7 +86,7 @@
         audioMeaning: "draw_attention_to_meaning.mp3"
       },
       {
-        word: "To put into practice",
+        word: "put into practice",
         synonym: "To implement",
         definition: "To start using an idea in real life",
         example: "Researchers put the new method into practice in the lab.",
@@ -94,7 +94,7 @@
         audioMeaning: "put_into_practice_meaning.mp3"
       },
       {
-        word: "To stand out",
+        word: "stand out",
         synonym: "To be noticeable",
         definition: "To be much better or more obvious",
         example: "Her clear writing style stands out in academic papers.",
@@ -102,14 +102,13 @@
         audioMeaning: "stand_out_meaning.mp3"
       },
       {
-        word: "To rule out",
+        word: "rule out",
         synonym: "To eliminate",
         definition: "To decide that something is not possible",
         example: "The committee ruled out several proposals as impractical.",
         audioWord: "rule_out_word.mp3",
         audioMeaning: "rule_out_meaning.mp3"
       }
-      // … 나머지 표현들도 동일한 포맷으로 추가하세요
     ];
 
     let idx = 0;
@@ -123,36 +122,38 @@
 
     function loadCard() {
       const entry = words[idx];
-      // 단어 및 의미 텍스트 설정
       wordEl.textContent = entry.word;
-      meaningEl.innerHTML = 
-        entry.synonym + "<br>" +
+      meaningEl.innerHTML =
+        entry.synonym    + "<br>" +
         entry.definition + "<br>" +
         "<em>" + entry.example + "</em>";
-      // 오디오 소스 교체
       audioWord.src    = entry.audioWord;
       audioMeaning.src = entry.audioMeaning;
-      // 새 오디오 로드
       audioWord.load();
       audioMeaning.load();
-      // 화면 초기화
       wordView.style.display    = "";
       meaningView.style.display = "none";
     }
 
-    // 재생 / 일시정지
+    // 재생·일시정지
     document.getElementById('playWord').onclick    = () => audioWord.play();
     document.getElementById('pauseWord').onclick   = () => audioWord.pause();
     document.getElementById('playMeaning').onclick = () => audioMeaning.play();
     document.getElementById('pauseMeaning').onclick= () => audioMeaning.pause();
 
-    // 단어 클릭 → 의미 보기
+    // 단어 클릭 → 의미 뷰
     wordEl.onclick = () => {
       wordView.style.display    = "none";
       meaningView.style.display = "";
     };
 
-    // 네비게이션
+    // **의미 클릭 → 단어 뷰로 돌아가기** ← 추가된 부분
+    meaningEl.onclick = () => {
+      meaningView.style.display = "none";
+      wordView.style.display    = "";
+    };
+
+    // ◀/▶ 내비게이션
     document.getElementById('next').onclick = () => {
       idx = (idx + 1) % words.length;
       loadCard();
@@ -162,7 +163,6 @@
       loadCard();
     };
 
-    // 최초 로드
     loadCard();
   </script>
 
